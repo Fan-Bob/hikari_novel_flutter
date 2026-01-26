@@ -19,7 +19,6 @@ import 'package:ttf_metadata/ttf_metadata.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../common/database/database.dart';
-import '../../common/log.dart';
 import '../../models/cat_volume.dart';
 import '../../models/page_state.dart';
 import '../../network/api.dart';

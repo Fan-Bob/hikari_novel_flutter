@@ -14,7 +14,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common/database/database.dart';
-import '../../common/log.dart';
 import '../../models/cat_chapter.dart';
 import '../../models/dual_page_mode.dart';
 import '../../models/page_state.dart';

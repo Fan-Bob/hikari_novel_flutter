@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import '../../../common/log.dart';
 import '../../../router/route_path.dart';
 import '../../../network/request.dart';
 

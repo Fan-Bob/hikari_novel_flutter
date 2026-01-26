@@ -12,7 +12,6 @@ import 'package:hikari_novel_flutter/widgets/state_page.dart';
 import 'package:intl/intl.dart';
 
 import '../../common/constants.dart';
-import '../../common/log.dart';
 import '../../models/page_state.dart';
 import '../../router/route_path.dart';
 
