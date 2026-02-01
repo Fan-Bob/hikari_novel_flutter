@@ -28,12 +28,12 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
+          channel: 'beta'
 
       - name: Get dependencies
         run: flutter pub get
@@ -62,7 +62,6 @@ jobs:
           name: Hikari Novel v${{ steps.ver.outputs.version }}
           body: |
             🚀 自动构建
-            📅 构建时间: ${{ github.event.head_commit.timestamp }}
           files: build/app/outputs/flutter-apk/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
