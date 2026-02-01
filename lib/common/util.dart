@@ -40,13 +40,13 @@ class Util {
     final response = await Api.fetchLatestRelease();
     if (response is Success) {
       final data = response.data;
-      final remoteVer = data['tag_name']; // e.g. "1.2.3"
+      final remoteVer = data['tag_name']; // e.g. "1.2.3-beta.2+2"
 
       final info = await PackageInfo.fromPlatform();
-      final localVer = info.version; // e.g. "1.2.0"
+      final localVer = info.version; // e.g. "1.2.0-beta.2"
 
-      final currRemoteVer = Version.parse(remoteVer);
-      final currLocalVer = Version.parse(localVer);
+      final currRemoteVer = Version.parse(remoteVer.toString().substring(0, remoteVer.toString().indexOf("+")));
+      final currLocalVer = Version.parse(localVer.toString());
 
       return currRemoteVer > currLocalVer;
     } else {
