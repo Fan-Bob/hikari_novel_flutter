@@ -1,0 +1,68 @@
+name: Sync and Build APK
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync upstream
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add upstream https://github.com/15dd/hikari_novel_flutter.git || true
+          git fetch upstream
+          git merge upstream/main --no-edit || true
+          git push origin main || true
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Setup signing
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/release-key.jks
+          cat > android/key.properties << EOF
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          storeFile=release-key.jks
+          EOF
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Get version
+        id: ver
+        run: echo "version=$(grep 'version:' pubspec.yaml | cut -d' ' -f2 | cut -d'+' -f1)" >> $GITHUB_OUTPUT
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.ver.outputs.version }}-${{ github.run_number }}
+          name: Hikari Novel v${{ steps.ver.outputs.version }}
+          body: |
+            🚀 自动构建
+            📅 构建时间: ${{ github.event.head_commit.timestamp }}
+          files: build/app/outputs/flutter-apk/app-release.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
