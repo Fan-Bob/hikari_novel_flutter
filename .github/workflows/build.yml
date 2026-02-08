@@ -6,14 +6,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  # 保持仓库活跃，防止被禁用
   keepalive:
     runs-on: ubuntu-latest
     permissions:
-      actions: write
+      contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: gautamkrishnar/keepalive-workflow@v2
+      - name: Keepalive Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "chore: keepalive [skip ci]"
+          git push
 
   build:
     runs-on: ubuntu-latest
